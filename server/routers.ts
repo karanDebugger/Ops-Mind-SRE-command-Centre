@@ -1,28 +1,82 @@
+import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
+import { invokeLLM } from "./_core/llm";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 
+const incidentSchema = z.object({
+  title: z.string(),
+  severity: z.string(),
+  service: z.string(),
+  logs: z.array(z.string()),
+  deployment: z.string(),
+  runbook: z.string(),
+});
+
 export const appRouter = router({
-    // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
-      return {
-        success: true,
-      } as const;
+      return { success: true } as const;
     }),
   }),
-
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
+  ops: router({
+    analyzeIncident: publicProcedure.input(incidentSchema).mutation(async ({ input }) => {
+      try {
+        const response = await invokeLLM({
+          messages: [
+            {
+              role: "system",
+              content: "You are an SRE incident commander. Use only the supplied evidence. Return concise JSON with diagnosis, confidence, contributingFactors, evidence, and nextBestAction. Never claim an action was executed.",
+            },
+            { role: "user", content: JSON.stringify(input) },
+          ],
+          response_format: {
+            type: "json_schema",
+            json_schema: {
+              name: "incident_analysis",
+              strict: true,
+              schema: {
+                type: "object",
+                properties: {
+                  diagnosis: { type: "string" },
+                  confidence: { type: "number" },
+                  contributingFactors: { type: "array", items: { type: "string" } },
+                  evidence: { type: "array", items: { type: "string" } },
+                  nextBestAction: { type: "string" },
+                },
+                required: ["diagnosis", "confidence", "contributingFactors", "evidence", "nextBestAction"],
+                additionalProperties: false,
+              },
+            },
+          },
+        });
+        const content = response.choices?.[0]?.message?.content;
+        return typeof content === "string" ? JSON.parse(content) : null;
+      } catch (error) {
+        console.warn("[Ops] LLM unavailable; UI will use local evidence-backed demo response.", error);
+        return null;
+      }
+    }),
+    generatePostmortem: publicProcedure.input(incidentSchema).mutation(async ({ input }) => {
+      try {
+        const response = await invokeLLM({
+          messages: [
+            { role: "system", content: "Draft a structured SRE postmortem from supplied evidence. Be factual, blameless, and label unknowns." },
+            { role: "user", content: JSON.stringify(input) },
+          ],
+        });
+        return response.choices?.[0]?.message?.content ?? null;
+      } catch (error) {
+        console.warn("[Ops] Postmortem model unavailable.", error);
+        return null;
+      }
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

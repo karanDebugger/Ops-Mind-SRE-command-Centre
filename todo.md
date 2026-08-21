@@ -1,0 +1,21 @@
+# Project TODO
+
+- [x] Establish premium Pentair OpsMind visual system: dark industrial palette, refined typography, clear hierarchy, responsive dashboard shell, and accessible interaction states
+- [x] Build real-time synthetic infrastructure dashboard for pumps, sensors, and water treatment systems
+- [x] Display synthetic CPU, memory, network, throughput, latency, and service-health metrics with live refresh behavior
+- [ ] Build incident feed with synthetic log events, severity classification, active/resolved status, and timeline rendering
+- [x] Add incident detail view with correlated logs, deployment history, runbook excerpts, and evidence citations
+- [x] Add grounded AI root-cause analysis experience with structured diagnosis, confidence, citations, and quality metadata
+- [x] Enforce hard human approval gate for every remediation action; no action may execute before explicit confirmation
+- [ ] Add remediation proposal cards for rollback, restart service, and scale pods with approval/rejection rationale capture
+- [ ] Record every AI suggestion, human decision, and system action in a comprehensive audit trail
+- [x] Build deployment safety checker for synthetic manifests with resource, image-tag, replica-count, and policy severity violations
+- [ ] Build audit log viewer with timestamps, actor identity, event type, rationale, and filters
+- [x] Build evaluation dashboard for faithfulness, retrieval hit rate, latency, and estimated token cost
+- [ ] Build runbook knowledge base supporting paste/upload-style synthetic documents and grounded context selection
+- [ ] Build one-click incident postmortem generator with timeline, root cause, impact, action items, review state, and export-ready layout
+- [ ] Create domain models, server procedures, and synthetic demo data for infrastructure, metrics, incidents, logs, deployments, runbooks, actions, audits, and evaluations
+- [ ] Add Vitest coverage for approval gating, audit completeness, safety policy validation, and core procedures
+- [ ] Run type checks, tests, and visual verification at desktop and mobile breakpoints
+- [x] Write README documentation covering architecture, safety boundaries, synthetic-data disclaimer, demo script, and extension points
+- [ ] Save final completed project checkpoint for user review and publishing through the Management UI
