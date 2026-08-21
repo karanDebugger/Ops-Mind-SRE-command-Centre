@@ -38,3 +38,27 @@
 - [x] Add Vitest coverage for policy evaluation, provenance verification, rollout transitions, SLO gates, approval enforcement, and audit completeness
 - [x] Add advanced architecture documentation, demo script, operator runbook, and interview talking points
 - [x] Run type checks, tests, desktop/mobile visual verification, save checkpoint, and synchronize advanced work to GitHub
+
+## AquaGuard Advanced Platform Engineering — Next Expansion
+
+- [x] Define and document the strict simulation boundary, threat model, and production-versus-demo architecture
+- [x] Add a typed platform model for clusters, namespaces, services, releases, workloads, SLOs, error budgets, and environments
+- [x] Add GitOps-style desired state versus observed state with drift detection and reconciliation preview
+- [x] Add an interactive local-cluster simulator view for namespaces, pods, replicas, readiness, restarts, and rollout status
+- [x] Add failure-injection controls for latency, errors, dependency timeouts, pod crashes, and resource pressure
+- [x] Add a release graph linking commit, build, artifact digest, SBOM, provenance, policy decision, rollout, telemetry, and operator decision
+- [x] Add stage-specific logs, metrics, traces, trace IDs, dependency spans, and release correlation IDs
+- [x] Add SLO burn-rate windows, error-budget consumption, alert thresholds, and automated promotion freeze reasons
+- [x] Add policy packs with environment-specific rules, exemptions, policy versioning, and explainable violations
+- [x] Add synthetic artifact registry view with image digests, SBOM packages, vulnerability severities, signatures, and provenance attestations
+- [x] Add GitHub Actions-style CI pipeline simulation with rerun, failed-job details, artifacts, and deployment handoff
+- [x] Add Argo CD-style sync preview, sync status, drift highlighting, and safe reconciliation simulation
+- [x] Add approval policies by action risk, two-person approval simulation for high-risk changes, expiry, and rejection reasons
+- [x] Add immutable hash-linked audit records and audit export view with event categories and integrity verification
+- [x] Add automated incident creation from failed rollout gates and suggested rollback/runbook linkage
+- [x] Add platform analytics for deployment frequency, lead time, change-failure rate, MTTR, blocked-release rate, and rollback readiness
+- [x] Add service catalog and golden-path template view for onboarding a new simulated service
+- [x] Add advanced scenario selector with healthy rollout, policy-blocked release, SLO-breached canary, drifted cluster, and provenance-failure scenarios
+- [x] Add CI tests for state transitions, failure injection, drift detection, policy packs, hash-chain audit integrity, and approval expiry
+- [x] Add architecture diagrams, threat model, operator runbooks, mentor walkthrough, and decision-record documentation
+- [ ] Add final desktop/mobile visual verification, save a new checkpoint, synchronize the advanced build to GitHub, and prepare the final demo handoff

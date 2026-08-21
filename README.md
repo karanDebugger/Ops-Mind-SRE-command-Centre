@@ -51,3 +51,13 @@ When a canary gate freezes, first confirm the release ID, environment boundary, 
 ### Release-quality metrics
 
 AquaGuard exposes a release-quality vocabulary that can be wired to real telemetry later: promotion-block accuracy measures whether unsafe candidates were stopped; gate latency measures breach-to-freeze time; provenance coverage measures releases with verifiable build evidence; rollback readiness measures whether a last-known-good artifact and runbook are available; and policy drift measures how often service manifests diverge from the approved baseline. These metrics are intentionally separated from raw uptime so the platform can measure the quality of the delivery control loop itself.
+
+## Platform Control Plane
+
+The `/platform` route expands AquaGuard from release governance into a production-thinking platform-engineering simulator. It includes a scenario lab, simulated cluster topology, workload readiness and restart signals, GitOps desired-versus-observed state, reconciliation preview, synthetic failure injection, multi-window SLO burn-rate visualization, a release evidence graph, and a hash-linked audit ledger.
+
+The scenario lab demonstrates five operator paths: healthy golden path, policy-blocked release, SLO-breached canary, drifted cluster, and provenance failure. The failure-injection panel can vary latency, error rate, CPU pressure, and pod crashes. It is explicitly a simulator: no Kubernetes API, registry, Pentair network, or production data is connected. The platform domain contracts in `server/platform.ts` are pure and independently tested for drift detection, policy evaluation, failure impact, SLO burn, and audit-chain integrity.
+
+### Advanced mentor walkthrough
+
+Start at `/platform` and select **Drifted cluster**. Show that Git desired state pins three replicas and a digest while observed state reports an old digest and incomplete readiness. Preview reconciliation and explain that the platform separates desired state from observed state rather than silently mutating a cluster. Switch to **SLO-breached canary**, inject latency and pod crashes, and show the workload readiness, multi-window burn rate, promotion freeze, and audit entry. Finish by connecting the release graph—commit, build, SBOM, provenance, policy, canary, decision—to the hard approval boundary in the Release Plane.
