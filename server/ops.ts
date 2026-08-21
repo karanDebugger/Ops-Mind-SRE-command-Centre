@@ -33,6 +33,13 @@ export function transitionAction(current: ActionState, decision: "approve" | "re
   return decision === "approve" ? "approved" : "rejected";
 }
 
-export function auditEventForDecision(action: string, decision: "approve" | "reject", actor: string) {
-  return { type: decision === "approve" ? "human_approval" : "human_rejection", action, actor, logged: true } as const;
+export function auditEventForDecision(action: string, decision: "approve" | "reject", actor: string, rationale = "") {
+  return { type: decision === "approve" ? "human_approval" : "human_rejection", action, actor, rationale, logged: true } as const;
+}
+
+export function buildAuditTrail(input: { suggestion: string; decision?: { action: string; approved: boolean; actor: string; rationale?: string }; systemAction?: string }) {
+  const events = [{ type: "ai_suggestion", action: input.suggestion, logged: true }];
+  if (input.decision) events.push(auditEventForDecision(input.decision.action, input.decision.approved ? "approve" : "reject", input.decision.actor, input.decision.rationale));
+  if (input.systemAction) events.push({ type: "system_action", action: input.systemAction, logged: true });
+  return events;
 }

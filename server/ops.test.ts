@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { auditEventForDecision, transitionAction, validateDeploymentManifest } from "./ops";
+import { auditEventForDecision, buildAuditTrail, transitionAction, validateDeploymentManifest } from "./ops";
 
 describe("deployment safety policy", () => {
   it("flags mutable images and under-sized resources", () => {
@@ -21,11 +21,18 @@ describe("approval gate", () => {
   });
 
   it("creates an auditable event for every human decision", () => {
-    expect(auditEventForDecision("rollback", "approve", "operator")).toEqual({
+    expect(auditEventForDecision("rollback", "approve", "operator", "Rollback is safer than live patching")).toEqual({
       type: "human_approval",
       action: "rollback",
       actor: "operator",
+      rationale: "Rollback is safer than live patching",
       logged: true,
     });
+  });
+
+  it("retains the full AI-to-human-to-system audit sequence", () => {
+    const events = buildAuditTrail({ suggestion: "pause rollout", decision: { action: "pause rollout", approved: true, actor: "operator", rationale: "Approved after checking evidence" }, systemAction: "rollout paused in simulator" });
+    expect(events.map(event => event.type)).toEqual(["ai_suggestion", "human_approval", "system_action"]);
+    expect(events.every(event => event.logged)).toBe(true);
   });
 });
